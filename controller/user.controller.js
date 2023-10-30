@@ -49,8 +49,8 @@ const login = asyncWrapper(
     const findUser = await User.findOne({email : email});
     const matchedPassword = await bcrypt.compare(password , findUser.password);
     if (findUser && matchedPassword) {
-    const token = await generateJWT({email : findUser.email , id : findUser._id});
-    return res.status(200).json({status : "success" , user : "logged in success" , data : {token}});       
+    // const token = await generateJWT({email : findUser.email , id : findUser._id});
+    return res.status(200).json({status : "success" , user : "logged in success"});       
     }
     else{
     return res.status(500).json({status : "fail" , data : "email and password are not correct"});      
@@ -66,7 +66,6 @@ const updateUser = asyncWrapper(
         return res.status(200).json({status : "success"});       
     }
 );
-
 const deleteUser = asyncWrapper(
     async(req, res)=>{
         const del = await User.deleteOne({_id : req.params.id});
