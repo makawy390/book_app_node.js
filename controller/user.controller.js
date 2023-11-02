@@ -17,6 +17,9 @@ const register = asyncWrapper(
     async(req,res)=>{
         const {username, email  , password  ,  role } = req.body;
         const oldEmail = await User.findOne({email: email , username : username});
+        if (!oldEmail) {
+            return  res.status(404).json({status : "fail" , data : "user and email is require", data_ar : " برجاء ادخل الاسم الثمائي و البريد الالكتروني و كلمة المرور "});
+        }
         if (oldEmail) {
       return  res.status(400).json({status : "fail" , data : "User is already exists", data_ar : "البريد الالكتروني او الاسم الثاني موجود بالفعل"});
         }
