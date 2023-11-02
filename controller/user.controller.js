@@ -1,9 +1,6 @@
 const User = require('../db/user.model');
 const asyncWrapper = require('../middleWare/asyncWrapper');
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken')
-// const generateJWT = require('../utils/generators.token');
-
 /* ========== Get All Users =========== */
 const getAllUsers = asyncWrapper(
     async(req,res)=>{
@@ -19,9 +16,9 @@ const getAllUsers = asyncWrapper(
 const register = asyncWrapper(
     async(req,res)=>{
         const {username, email  , password  ,  role } = req.body;
-        const oldEmail = await User.findOne({email: email});
+        const oldEmail = await User.findOne({email: email , username : username});
         if (oldEmail) {
-      return  res.status(400).json({status : "fail" , data : "User is already exists"});
+      return  res.status(400).json({status : "fail" , data : "User is already exists", data_ar : "البريد الالكتروني او الاسم الثاني موجود بالفعل"});
         }
         /* password hashing */
         const hashingPassword = await bcrypt.hash(password , 10);
@@ -31,12 +28,8 @@ const register = asyncWrapper(
             password : hashingPassword,
             role,
         });
-        // generator JWT token
-    //    const token = await generateJWT({email : newUser.email , id : newUser._id })
-    //    console.log(token);
-    //    newUser.token = token;
         await newUser.save();
-      return  res.status(201).json({status : "success" , data : {newUser}});
+      return  res.status(201).json({status : "success" , data : {newUser} , data_ar : "تم انشاء حساب جديد"});
     }
 )
 /* ========== Login =========== */
@@ -44,16 +37,16 @@ const login = asyncWrapper(
     async(req,res) =>{
     const {email , password} = req.body;
     if (!email && !password) {
-    return  res.status(400).json({status : "fail" , data : "email and password are required"});       
+    return  res.status(400).json({status : "fail" , data_en : "email and password are required" , data_ar : "يرجاء ادخال البريدك الالكتروني وكلمة المرور"});       
     }
     const findUser = await User.findOne({email : email});
     const matchedPassword = await bcrypt.compare(password , findUser.password);
     if (findUser && matchedPassword) {
     // const token = await generateJWT({email : findUser.email , id : findUser._id});
-    return res.status(200).json({status : "success" , user : "logged in success"});       
+    return res.status(200).json({status : "success" , data_en : "logged in success" , data_ar : "تم تسجيل الدخول بنجاح"});       
     }
     else{
-    return res.status(500).json({status : "fail" , data : "email and password are not correct"});      
+    return res.status(500).json({status : "fail" , data : "email and password are not correct" , data_ar : "البريج الالكتروني او كلمة السر غير صحيحة"});      
     }
     }
 )
