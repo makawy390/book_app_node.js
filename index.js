@@ -17,10 +17,6 @@ app.use('/api/books' , booksRouter);
 // 8) Add Router User 
 const userRouter = require('./routes/user.route');
 app.use('/api/user' , userRouter);
-// 
-// 8) Add Router User 
-const boughtRouter = require('./routes/bought.route');
-app.use('/api/bought' , boughtRouter);
 // 9) add Error Api
 app.all('*', (req, res, next) => {
     res.status(404).json({status : "Error" , });
