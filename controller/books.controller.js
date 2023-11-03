@@ -1,5 +1,5 @@
 const Books = require('../db/books.model');
-const {ERROR , FAIL , SUCCESS , OK , MESSAGE} = require('../utils/httpStatus')
+const { FAIL , SUCCESS , OK } = require('../utils/httpStatus')
 const asyncWrapper = require('../middleWare/asyncWrapper');
 const appError = require('../utils/appError') 
 /* ====================== Get All Books ================================= */
@@ -17,7 +17,7 @@ const addBook = asyncWrapper(
     async(req , res , next)=>{
             const newBook = await new Books(req.body);
             await newBook.save();
-            res.status(200).json({status : SUCCESS , data : {newBook}})
+            res.status(200).json({status : SUCCESS , data : {newBook} , data_ar : "تم اضافة كتاب جديد" })
             if (!newBook) {
             const error = appError.create("not found Book" , 404 , SUCCESS );;
             next(error);                  
@@ -42,7 +42,7 @@ const update_book = asyncWrapper(
             if (!update) {
                 next({status : FAIL , data : null})
             }
-        res.status(200).json({status : SUCCESS , data : {update}})
+        res.status(200).json({status : SUCCESS , data : {update} , data_ar : "تم تعديل بنجاح"})
       
     }
 )
